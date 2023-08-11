@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import WebViewEvents from '@utility/webViewEvents';
+import { AdvertisementEvents } from '../shared/enums/AdvertisementEvents';
 
 export default {
     data() {
@@ -31,7 +32,7 @@ export default {
         sendMessage() {
             if (this.newMessage.trim() !== '') {
                 const currentTime = new Date().toLocaleTimeString();
-                WebViewEvents.emitServer(`Advertisement:SendMessage`, {
+                WebViewEvents.emitServer(AdvertisementEvents.SEND_MESSAGE, {
                     content: this.newMessage,
                     timestamp: currentTime,
                 });
@@ -47,10 +48,8 @@ export default {
         },
     },
     mounted() {
-        console.log('Current available Messages => ' + JSON.stringify(this.messages));
-
-        WebViewEvents.emitServer(`Advertisement:RequestMessages`);
-        WebViewEvents.on(`Advertisement:SetMessageArray`, this.setMessages);
+        WebViewEvents.emitServer(AdvertisementEvents.REQUEST_MESSAGES);
+        WebViewEvents.on(AdvertisementEvents.SET_MESSAGE_ARRAY, this.setMessages);
 
         WebViewEvents.emitReady(`Advertisement`);
     },

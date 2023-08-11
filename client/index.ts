@@ -1,6 +1,7 @@
 import * as alt from 'alt-client';
 import * as AthenaClient from '@AthenaClient/api';
 import { onTicksStart } from '@AthenaClient/events/onTicksStart';
+import { AdvertisementEvents } from '../shared/enums/AdvertisementEvents';
 
 function init() {
     const page = new AthenaClient.webview.Page({
@@ -31,7 +32,7 @@ function init() {
         },
     });
 
-    alt.onServer('Advertisement:OpenUI', () => {
+    alt.onServer(AdvertisementEvents.OPEN_UI, () => {
         if (typeof page !== 'undefined') {
             page.open();
         }
@@ -40,10 +41,10 @@ function init() {
 
 onTicksStart.add(init);
 
-alt.onServer(`Advertisement:SetMessageArray`, (messageArray: Array<{ content: string; timestamp: string }>) => {
-    AthenaClient.webview.emit(`Advertisement:SetMessageArray`, messageArray);
+alt.onServer(AdvertisementEvents.SET_MESSAGE_ARRAY, (messageArray: Array<{ content: string; timestamp: string }>) => {
+    AthenaClient.webview.emit(AdvertisementEvents.SET_MESSAGE_ARRAY, messageArray);
 });
 
-alt.onServer(`Advertisement:LoadMessages`, (messagesArray: Array<{ content: string; timestamp: string }>) => {
-    AthenaClient.webview.emit(`Advertisement:SetMessageArray`, messagesArray);
+alt.onServer(AdvertisementEvents.LOAD_MESSAGES, (messagesArray: Array<{ content: string; timestamp: string }>) => {
+    AthenaClient.webview.emit(AdvertisementEvents.SET_MESSAGE_ARRAY, messagesArray);
 });
